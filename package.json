@@ -1,0 +1,23 @@
+{
+  "name": "memgen-api",
+  "version": "0.0.1",
+  "description": "Memes",
+  "main": "index.js",
+  "scripts": {
+    "test": "It's OK !"
+  },
+  "keywords": [
+    "api",
+    "restful",
+    "json"
+  ],
+  "author": "sbogdan",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4",
+    "express-generator": "^4.16.0",
+    "morgan": "^1.9.1",
+    "pg": "^6.4.2"
+  }
+}

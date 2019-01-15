@@ -4,7 +4,7 @@
   "description": "Memes",
   "main": "index.js",
   "scripts": {
-    "test": "It's OK !"
+    "start:server": "webpack --config webpack.config.server.js"
   },
   "keywords": [
     "api",
@@ -14,16 +14,26 @@
   "author": "sbogdan",
   "license": "ISC",
   "dependencies": {
+    "add": "^2.0.6",
+    "babel": "^6.23.0",
+    "babel-core": "^6.26.3",
+    "babel-loader": "^8.0.5",
+    "babel-preset-env": "^1.7.0",
     "body-parser": "^1.18.3",
     "express": "^4.16.4",
     "express-generator": "^4.16.0",
     "morgan": "^1.9.1",
     "pg": "^6.4.2",
     "pg-hstore": "^2.3.2",
-    "sequelize": "^4.42.0"
+    "sequelize": "^4.42.0",
+    "start-server-webpack-plugin": "^2.2.5",
+    "webpack-node-externals": "^1.7.2"
   },
   "devDependencies": {
+    "@babel/core": "^7.2.2",
+    "@babel/preset-env": "^7.2.3",
     "node-hot-loader": "^1.12.3",
-    "webpack": "^4.28.4"
+    "webpack": "^4.28.4",
+    "webpack-cli": "^3.2.1"
   }
 }

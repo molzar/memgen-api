@@ -1,33 +1,21 @@
-const express = require('express');
-const path = require('path');
-const logger = require('morgan');
+import express from 'express'
+const app = express()
+const routes = require('../routes/index');
+const apiUsers = require('../routes/users');
+const apiPosts = require('../routes/posts');
 const bodyParser = require('body-parser');
-
-
-const routes = require('./routes/index');
-const apiUsers = require('./routes/users');
-const apiPosts = require('./routes/posts');
-//const getConfig = require('./configs.js');
-const app = express();
-
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(express.static(path.join(__dirname, 'client')));
 
-//TODO : Do better here !
 app.use('/', routes);
 app.use('/api/users', apiUsers);
 app.use('/api/posts', apiPosts);
-
-// catch 404 and forward to error handler
 app.use((req, res, next) => {
     var err = new Error('Not Found');
     err.status = 404;
     next(err);
 });
-
-// error handlers
 
 // development error handler
 // will print stacktrace
@@ -51,13 +39,4 @@ app.use((err, req, res, next) => {
     });
 });
 
-
-const port = process.env.PORT || 3000;
-// Send message for default URL
-
-// Launch app to listen to specified port
-app.listen(port, function () {
-    console.log("Running on port " + port);
-});
-
-module.exports = app;
+export default app

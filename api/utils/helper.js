@@ -29,6 +29,7 @@ Helper.genericCallDB = function(query) {
     }) ;
 };
 
+
 Helper.genericHandlerCallDB = function(query, res){
 
     Helper.genericCallDB(query)
@@ -39,5 +40,6 @@ Helper.genericHandlerCallDB = function(query, res){
             return res.status(500).json({success: false, data: reject.data});
         });
 }
+
 
 module.exports = Helper;

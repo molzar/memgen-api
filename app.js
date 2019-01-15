@@ -5,8 +5,8 @@ const bodyParser = require('body-parser');
 
 
 const routes = require('./routes/index');
-const apiUsers = require('./api/users');
-const apiPosts = require('./api/posts');
+const apiUsers = require('./routes/users');
+const apiPosts = require('./routes/posts');
 //const getConfig = require('./configs.js');
 const app = express();
 
@@ -17,15 +17,6 @@ app.use(express.static(path.join(__dirname, 'client')));
 
 //TODO : Do better here !
 app.use('/', routes);
-// app.use('/api/:dynamicroute', function(req,res, next) {
-//     console.log("ajunge dinamic");
-//     console.log(getConfig.item("realRoutes").toString());
-//     if (getConfig.item("realRoutes").includes(req.params.dynamicroute)){
-//         next();
-//     }
-//     //Not found
-//     res.status(404).send();
-// });
 app.use('/api/users', apiUsers);
 app.use('/api/posts', apiPosts);
 

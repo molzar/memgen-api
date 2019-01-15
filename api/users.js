@@ -1,56 +1,112 @@
-const express = require('express');
-const router = express.Router();
-const pg = require('pg');
-const helper = require('./utils/helper.js');
+const User = require('../model/users');
 
-router.post('/', (req, res, next) => {
-    const query ={
-        text : 'insert into users(username, password, email, description, avatarurl, age) values($1, $2, $3, $4, $5, $6) returning *',
-        values : [req.query.username, req.query.password, req.query.email, req.query.description, req.query.avatarurl, req.query.age]
-    };
-    return helper.genericHandlerCallDB(query, res);
-});
+function Users(){}
 
-router.put('/:id', (req, res, next) => {
-    const query = {
-        text: 'update users set username = $1, password = $2, email = $3, description = $4, avatarurl = $5, age = $6 where id = $7 returning *',
-        values: [req.query.username, req.query.password, req.query.email, req.query.description, req.query.avatarurl, req.query.age, req.params.id]
-    };
-    return helper.genericHandlerCallDB(query, res);
-});
+Users.findAllUsers = function() {
+    return new Promise(function(resolve, reject) {  
+        User.findAll()
+            .then(users => {
+                resolve({success: true, data: users});
+            })
+            .catch(e => {
+                reject({success: false, data: e.errors});
+            });
+    })
+};
 
-router.get('/', (req, res, next) => {
-    const query ={
-        text : 'select * from users order by id desc'
-    };
-    return helper.genericHandlerCallDB(query, res);
-});
+Users.findById = function(id) {
+    return new Promise(function(resolve, reject) {  
+        User.findByPk(id)
+            .then(users => {
+                resolve({success: true, data: users});
+            })
+            .catch(e => {
+                reject({success: false, data: e.errors});
+            });
+    })
+};
 
-router.get('/:username&:pwd', (req, res, next) => {
-    const query ={
-        text : 'select * from users where username = $1 and password = $2',
-        values : [req.params.username, req.params.pwd]
-    };
-    helper.genericCallDB(query)
-        .then(result => {
-            if(result.data[0]){
-                return res.json({success: true, data: result.data});
+Users.findByUserPass = function(username, password) {
+    return new Promise(function(resolve, reject) {
+        User.findAll({
+            where: {
+                username : username,
+                password : password
             }
-            
-            return res.json({success: false, data : "The User Name or Password is Incorrect"});
         })
-        .catch(reject => {
-            return res.status(500).json({success: false, data: reject.data});
+        .then(users => {
+            resolve({success: true, data: users});
+        })
+        .catch(e => {
+            reject({success: false, data: e.errors});
         });
-});
+    })
+};
 
-router.delete('/:id', (req, res, next) => {
-    const query ={
-        text : 'delete from users where id = $1',
-        values : [req.params.id]
-    };
-    return helper.genericHandlerCallDB(query, res);
-});
+Users.update = function(user){
+    return new Promise(function(resolve, reject) {
+        User.findByPk(user.id)
+            .then(users => {
+                if (users && users.username) {
+                    users.username = user.username;
+                    users.password = user.password;
+                    users.email = user.email;
+                    users.description = user.description;
+                    users.avatarurl = user.avatarurl;
+                    users.age = user.age;
 
+                    users.save()
+                        .then((user) => {
+                            resolve({success: true, data: user});
+                        }).catch(e => {
+                            reject({success: false, data: e.errors});
+                        });
+                }
+                else { 
+                    reject({success: false, data: "User doesn't exist !"});
+                }
+            })
+            .catch(e => {
+                reject({success: false, data: e.errors});
+            });
+        });
+};
 
-module.exports = router;
+Users.deleteById = function(id){
+    return new Promise(function(resolve, reject) {  
+        User.findByPk(id)
+            .then(users => {
+                if (users && users.username) {
+                    users.destroy();
+                    resolve({success: true, data: ""});
+                }
+                else {
+                    reject({success: false, data: "User doesn't exist !"});
+                }
+            })
+            .catch(e => {
+                reject({success: false, data: e.errors});
+            });
+    });
+};
+
+Users.insert = function(user){
+    return new Promise(function(resolve, reject) { 
+        User.create({
+            username: user.username, 
+            password: user.password, 
+            email : user.email,
+            description : user.description,
+            avatarurl : user.avatarurl,
+            age : user.age
+        })
+        .then(users => {
+            resolve({success: true, data: users});
+        })
+        .catch(e => {
+            reject({success: false, data: e.errors});
+        });
+    });
+};
+
+module.exports = Users;

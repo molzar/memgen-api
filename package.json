@@ -18,6 +18,12 @@
     "express": "^4.16.4",
     "express-generator": "^4.16.0",
     "morgan": "^1.9.1",
-    "pg": "^6.4.2"
+    "pg": "^6.4.2",
+    "pg-hstore": "^2.3.2",
+    "sequelize": "^4.42.0"
+  },
+  "devDependencies": {
+    "node-hot-loader": "^1.12.3",
+    "webpack": "^4.28.4"
   }
 }

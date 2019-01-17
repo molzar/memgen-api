@@ -1,34 +1,35 @@
-const Post = require('../model/posts');
+const Models = require('../models/index');
+const postsEntity = Models.posts;
 
-function Posts(){}
+function PostsApi(){}
 
-Posts.findAllPosts = function() {
+PostsApi.findAllPosts = function() {
     return new Promise(function(resolve, reject) {  
-        Post.findAll()
+        postsEntity.findAll()
             .then(posts => {
                 resolve({success: true, data: posts});
             })
             .catch(e => {
-                reject({success: false, data: e.errors});
+                reject({success: false, data: e});
             });
     })
 };
 
-Posts.findById = function(id) {
+PostsApi.findById = function(id) {
     return new Promise(function(resolve, reject) {  
-        Post.findByPk(id)
-            .then(posts => {
-                resolve({success: true, data: posts});
+        postsEntity.findByPk(id)
+            .then(responsePost => {
+                resolve({success: true, data: responsePost});
             })
             .catch(e => {
-                reject({success: false, data: e.errors});
+                reject({success: false, data: e});
             });
     })
 };
 
-Posts.findByUser = function(idUser) {
+PostsApi.findByUser = function(idUser) {
     return new Promise(function(resolve, reject) {
-        Post.findAll({
+        postsEntity.findAll({
             where: {
                 id_user : idUser
             }
@@ -37,26 +38,24 @@ Posts.findByUser = function(idUser) {
             resolve({success: true, data: posts});
         })
         .catch(e => {
-            reject({success: false, data: e.errors});
+            reject({success: false, data: e});
         });
     })
 };
 
 
-Posts.update = function(post){
+PostsApi.update = function(post){
     return new Promise(function(resolve, reject) {
-        console.log(post.url);
-        console.log(post.id_user);
-        Post.findByPk(post.id)
-            .then(posts => {
-                if (posts && posts.id) {
-                    posts.url = post.url;
-                    posts.id_user = post.id_user;
-                    posts.save()
-                        .then((post) => {
-                            resolve({success: true, data: post});
+        postsEntity.findByPk(post.id)
+            .then(responsePost => {
+                if (responsePost && responsePost.id) {
+                    responsePost.url = post.url;
+                    responsePost.id_user = post.id_user;
+                    responsePost.save()
+                        .then((responseSavePost) => {
+                            resolve({success: true, data: responseSavePost});
                         }).catch(e => {
-                            reject({success: false, data: e.errors});
+                            reject({success: false, data: e});
                         });
                 }
                 else { 
@@ -64,17 +63,17 @@ Posts.update = function(post){
                 }
             })
             .catch(e => {
-                reject({success: false, data: e.errors});
+                reject({success: false, data: e});
             });
         });
 };
 
-Posts.deleteById = function(id){
+PostsApi.deleteById = function(id){
     return new Promise(function(resolve, reject) {  
-        Post.findByPk(id)
-            .then(posts => {
-                if (posts && posts.id) {
-                    posts.destroy();
+        postsEntity.findByPk(id)
+            .then(responsePost => {
+                if (responsePost && responsePost.id) {
+                    responsePost.destroy();
                     resolve({success: true, data: ""});
                 }
                 else {
@@ -82,24 +81,24 @@ Posts.deleteById = function(id){
                 }
             })
             .catch(e => {
-                reject({success: false, data: e.errors});
+                reject({success: false, data: e});
             });
     });
 };
 
-Posts.insert = function(post){
+PostsApi.insert = function(post){
     return new Promise(function(resolve, reject) { 
-        Post.create({
+        postsEntity.create({
             url: post.url,
             id_user : post.id_user
         })
-        .then(posts => {
-            resolve({success: true, data: posts});
+        .then(responsePost => {
+            resolve({success: true, data: responsePost});
         })
         .catch(e => {
-            reject({success: false, data: e.errors});
+            reject({success: false, data: e});
         });
     });
 };
 
-module.exports = Posts;
+module.exports = PostsApi;

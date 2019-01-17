@@ -1,34 +1,35 @@
-const User = require('../model/users');
+const Models = require('../models/index');
+const usersEntity = Models.users;
 
-function Users(){}
+function UsersApi(){}
 
-Users.findAllUsers = function() {
+UsersApi.findAllUsers = function() {
     return new Promise(function(resolve, reject) {  
-        User.findAll()
+        usersEntity.findAll()
             .then(users => {
                 resolve({success: true, data: users});
             })
             .catch(e => {
-                reject({success: false, data: e.errors});
+                reject({success: false, data: e});
             });
     })
 };
 
-Users.findById = function(id) {
+UsersApi.findById = function(id) {
     return new Promise(function(resolve, reject) {  
-        User.findByPk(id)
-            .then(users => {
-                resolve({success: true, data: users});
+        usersEntity.findByPk(id)
+            .then(responseUser => {
+                resolve({success: true, data: responseUser});
             })
             .catch(e => {
-                reject({success: false, data: e.errors});
+                reject({success: false, data: e});
             });
     })
 };
 
-Users.findByUserPass = function(username, password) {
+UsersApi.findByUserPass = function(username, password) {
     return new Promise(function(resolve, reject) {
-        User.findAll({
+        usersEntity.findAll({
             where: {
                 username : username,
                 password : password
@@ -38,28 +39,28 @@ Users.findByUserPass = function(username, password) {
             resolve({success: true, data: users});
         })
         .catch(e => {
-            reject({success: false, data: e.errors});
+            reject({success: false, data: e});
         });
     })
 };
 
-Users.update = function(user){
+UsersApi.update = function(user){
     return new Promise(function(resolve, reject) {
-        User.findByPk(user.id)
-            .then(users => {
-                if (users && users.username) {
-                    users.username = user.username;
-                    users.password = user.password;
-                    users.email = user.email;
-                    users.description = user.description;
-                    users.avatarurl = user.avatarurl;
-                    users.age = user.age;
+        usersEntity.findByPk(user.id)
+            .then(responseUser => {
+                if (responseUser && responseUser.username) {
+                    responseUser.username = user.username;
+                    responseUser.password = user.password;
+                    responseUser.email = user.email;
+                    responseUser.description = user.description;
+                    responseUser.avatarurl = user.avatarurl;
+                    responseUser.age = user.age;
 
-                    users.save()
-                        .then((user) => {
-                            resolve({success: true, data: user});
+                    responseUser.save()
+                        .then((reponseSaveUser) => {
+                            resolve({success: true, data: reponseSaveUser});
                         }).catch(e => {
-                            reject({success: false, data: e.errors});
+                            reject({success: false, data: e});
                         });
                 }
                 else { 
@@ -67,17 +68,17 @@ Users.update = function(user){
                 }
             })
             .catch(e => {
-                reject({success: false, data: e.errors});
+                reject({success: false, data: e});
             });
         });
 };
 
-Users.deleteById = function(id){
+UsersApi.deleteById = function(id){
     return new Promise(function(resolve, reject) {  
-        User.findByPk(id)
-            .then(users => {
-                if (users && users.username) {
-                    users.destroy();
+        usersEntity.findByPk(id)
+            .then(responseUser => {
+                if (responseUser && responseUser.username) {
+                    responseUser.destroy();
                     resolve({success: true, data: ""});
                 }
                 else {
@@ -85,14 +86,14 @@ Users.deleteById = function(id){
                 }
             })
             .catch(e => {
-                reject({success: false, data: e.errors});
+                reject({success: false, data: e});
             });
     });
 };
 
-Users.insert = function(user){
+UsersApi.insert = function(user){
     return new Promise(function(resolve, reject) { 
-        User.create({
+        usersEntity.create({
             username: user.username, 
             password: user.password, 
             email : user.email,
@@ -100,13 +101,13 @@ Users.insert = function(user){
             avatarurl : user.avatarurl,
             age : user.age
         })
-        .then(users => {
-            resolve({success: true, data: users});
+        .then(responseUser => {
+            resolve({success: true, data: responseUser});
         })
         .catch(e => {
-            reject({success: false, data: e.errors});
+            reject({success: false, data: e});
         });
     });
 };
 
-module.exports = Users;
+module.exports = UsersApi;

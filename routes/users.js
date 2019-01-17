@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const users = require('../api/users');
-const usersEntity = require('../model/users');
+const Models = require('../models/index');
+const usersEntity = Models.users;
 
 router.post('/', (req, res, next) => {
     const user = usersEntity.build({
@@ -21,8 +22,6 @@ router.post('/', (req, res, next) => {
 });
 
 router.put('/:id', (req, res, next) => {
-    console.log(req.query.age);
-
     const user = usersEntity.build({
         id : req.params.id,
         username: req.query.username, 
@@ -57,11 +56,9 @@ router.get('/:username&:pwd', (req, res, next) => {
 
     users.findByUserPass(values.username, values.pwd)
         .then(result => {
-            console.log(result.data);
             if(result.data[0]){
                 return res.json({success: true, data: result.data});
             }
-            
             return res.json({success: false, data : "The User Name or Password is Incorrect"});
         })
         .catch(reject => {

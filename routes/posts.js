@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const posts = require('../api/posts');
-const postsEntity = require('../model/posts');
+const Models = require('../models/index');
+const postsEntity = Models.posts;
 
 router.post('/', (req, res, next) => {
     const post = postsEntity.build({
@@ -37,27 +38,27 @@ router.get('/', (req, res, next) => {
             return res.json(resolve.data);
         })
         .catch(reject => {
-            return res.status(500).json(reject.data);
+            return res.status(500).json(reject);
         });
 });
 
 router.get('/:idUser', (req, res, next) => {
     posts.findByUser(req.params.idUser)
         .then(resolve => {
-            return res.json(resolve.data);
+            return res.json(resolve);
         })
         .catch(reject => {
-            return res.status(500).json(reject.data);
+            return res.status(500).json(reject);
         });
 });
 
 router.get('/:idUser/:id', (req, res, next) => {
     posts.findById(req.params.id)
         .then(resolve => {
-            return res.json(resolve.data);
+            return res.json(resolve);
         })
         .catch(reject => {
-            return res.status(500).json(reject.data);
+            return res.status(500).json(reject);
         });
 });
 

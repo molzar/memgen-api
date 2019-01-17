@@ -4,7 +4,9 @@ const routes = require('../routes/index');
 const apiUsers = require('../routes/users');
 const apiPosts = require('../routes/posts');
 const bodyParser = require('body-parser');
+const dotenv = require('dotenv');
 
+dotenv.config();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 

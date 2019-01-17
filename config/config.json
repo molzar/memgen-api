@@ -1,0 +1,26 @@
+{
+  "development": {
+    "username": "memgen",
+    "password": "memgen",
+    "database": "memgen",
+    "schema": "memgen",
+    "host": "localhost",
+    "dialect": "postgres"
+  },
+  "test": {
+    "username": "memgen",
+    "password": "memgen",
+    "database": "memgen",
+    "schema": "memgen",
+    "host": "localhost",
+    "dialect": "postgres"
+  },
+  "production": {
+    "username": "memgen",
+    "password": "memgen",
+    "database": "memgen",
+    "schema": "memgen",
+    "host": "memgen",
+    "dialect": "postgres"
+  }
+}

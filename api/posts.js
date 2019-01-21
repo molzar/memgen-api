@@ -1,54 +1,104 @@
-const express = require('express');
-const router = express.Router();
-const helper = require('./utils/helper.js');
+const Models = require('../models/index');
+const postsEntity = Models.posts;
 
-router.post('/', (req, res, next) => {
-    console.log(req.query.url);
-    const query ={
-        text : 'insert into posts(url, id_user) values($1, $2) returning *',
-        values : [req.query.url, req.query.id_user]
-    };
-    return helper.genericHandlerCallDB(query, res);
-});
+function PostsApi(){}
 
-router.put('/:id', (req, res, next) => {
-    const query = {
-        text: 'update posts set url = $1 where id = $2 returning *',
-        values: [req.query.url, req.params.id]
-    };
-    return helper.genericHandlerCallDB(query, res);
-});
+PostsApi.findAllPosts = function() {
+    return new Promise(function(resolve, reject) {  
+        postsEntity.findAll()
+            .then(posts => {
+                resolve({success: true, data: posts});
+            })
+            .catch(e => {
+                reject({success: false, data: e});
+            });
+    })
+};
 
-router.get('/', (req, res, next) => {
-    const query ={
-        text : 'select * from posts order by id desc'
-    };
-    return helper.genericHandlerCallDB(query, res);
-});
+PostsApi.findById = function(id) {
+    return new Promise(function(resolve, reject) {  
+        postsEntity.findByPk(id)
+            .then(responsePost => {
+                resolve({success: true, data: responsePost});
+            })
+            .catch(e => {
+                reject({success: false, data: e});
+            });
+    })
+};
 
-router.get('/:idUser', (req, res, next) => {
-    const query ={
-        text : 'select * from posts where id_user = $1',
-        values : [req.params.idUser]
-    };
-    return helper.genericHandlerCallDB(query, res);
-});
-
-router.get('/:idUser/:id', (req, res, next) => {
-    const query ={
-        text : 'select * from posts where id_user = $1 and id = $2',
-        values : [req.params.idUser, req.params.id]
-    };
-    return helper.genericHandlerCallDB(query, res);
-});
-
-router.delete('/:id', (req, res, next) => {
-    const query ={
-        text : 'delete from posts where id = $1',
-        values : [req.params.id]
-    };
-    return helper.genericHandlerCallDB(query, res);
-});
+PostsApi.findByUser = function(idUser) {
+    return new Promise(function(resolve, reject) {
+        postsEntity.findAll({
+            where: {
+                id_user : idUser
+            }
+        })
+        .then(posts => {
+            resolve({success: true, data: posts});
+        })
+        .catch(e => {
+            reject({success: false, data: e});
+        });
+    })
+};
 
 
-module.exports = router;
+PostsApi.update = function(post){
+    return new Promise(function(resolve, reject) {
+        postsEntity.findByPk(post.id)
+            .then(responsePost => {
+                if (responsePost && responsePost.id) {
+                    responsePost.url = post.url;
+                    responsePost.id_user = post.id_user;
+                    responsePost.save()
+                        .then((responseSavePost) => {
+                            resolve({success: true, data: responseSavePost});
+                        }).catch(e => {
+                            reject({success: false, data: e});
+                        });
+                }
+                else { 
+                    reject({success: false, data: "Post doesn't exist !"});
+                }
+            })
+            .catch(e => {
+                reject({success: false, data: e});
+            });
+        });
+};
+
+PostsApi.deleteById = function(id){
+    return new Promise(function(resolve, reject) {  
+        postsEntity.findByPk(id)
+            .then(responsePost => {
+                if (responsePost && responsePost.id) {
+                    responsePost.destroy();
+                    resolve({success: true, data: ""});
+                }
+                else {
+                    reject({success: false, data: "Post doesn't exist !"});
+                }
+            })
+            .catch(e => {
+                reject({success: false, data: e});
+            });
+    });
+};
+
+PostsApi.insert = function(post){
+    return new Promise(function(resolve, reject) { 
+        postsEntity.create({
+            url: post.url,
+            id_user : post.id_user
+        })
+        .then(responsePost => {
+            resolve({success: true, data: responsePost});
+        })
+        .catch(e => {
+            reject({success: false, data: e});
+        });
+    });
+};
+
+module.exports = PostsApi;

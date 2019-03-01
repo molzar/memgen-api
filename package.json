@@ -25,9 +25,11 @@
     "express-generator": "^4.16.0",
     "morgan": "^1.9.1",
     "pg": "^7.8.0",
+    "request": "^2.88.0",
     "sequelize": "^4.42.0",
     "sequelize-cli": "^5.4.0",
     "start-server-webpack-plugin": "^2.2.5",
+    "url": "^0.11.0",
     "webpack-node-externals": "^1.7.2"
   },
   "devDependencies": {

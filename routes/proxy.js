@@ -14,7 +14,7 @@ router.get("/:imgLink", (req, response, next) => {
   //   "GET, POST, PATCH, PUT, DELETE, OPTIONS"
   // );
   // response.header("access-control-allow-origin", "true");
-  console.log(req.params.imgLink);
+
   request(req.params.imgLink).pipe(response);
 });
 

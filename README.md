@@ -1,15 +1,19 @@
 # memgen-api
-#Requirements: 
+
+#Requirements:
+
 # -> Postgres db
+
 # -> Node
-# -> npm 
+
+# -> npm
 
 #To install App :
-#First run : npm install 
+#First run : npm install
 #You need database server configuration -> /config/config.json
-#Optional : If the database doesn't exist then run in terminal -> node_modules/.bin/sequelize db:create
-#Optional : Create the db structure : node_modules/.bin/sequelize db:migrate
-#Optional : Insert god in DB : node_modules/.bin/sequelize db:seed:all
-#Optional : Clear all tables in DB : node_modules/.bin/sequelize db:seed:undo:all
+#Optional : If the database doesn't exist then run in terminal -> npm run create-db
+#Optional : Create the db structure : npm run migrate-db
+#Optional : Insert god in DB : npm run insert-dummy-data
+#Optional : Clear all tables in DB : npm run clear-all-data
 
 #To start server : npm run start:server

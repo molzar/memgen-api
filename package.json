@@ -4,7 +4,11 @@
   "description": "Memes",
   "main": "index.js",
   "scripts": {
-    "start:server": "webpack --config webpack.config.server.js"
+    "start:server": "webpack --config webpack.config.server.js",
+    "create-db": "node_modules/.bin/sequelize db:create",
+    "migrate-db": "node_modules/.bin/sequelize db:migrate",
+    "insert-dummy-data": "node_modules/.bin/sequelize db:seed:all",
+    "clear-all-data": "node_modules/.bin/sequelize db:seed:undo:all" 
   },
   "keywords": [
     "api",

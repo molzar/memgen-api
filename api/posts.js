@@ -6,7 +6,11 @@ function PostsApi() {}
 PostsApi.findAllPosts = function(limit, offset) {
   return new Promise(function(resolve, reject) {
     postsEntity
-      .findAll({ limit: limit, offset: offset, order: [["id", "DESC"]] })
+      .findAll({
+        limit: limit,
+        offset: offset,
+        order: [["id", "DESC"]]
+      })
       .then(posts => {
         resolve({ success: true, data: posts });
       })
@@ -100,6 +104,19 @@ PostsApi.insert = function(post) {
         url: post.url,
         id_user: post.id_user
       })
+      .then(responsePost => {
+        resolve({ success: true, data: responsePost });
+      })
+      .catch(e => {
+        reject({ success: false, data: e });
+      });
+  });
+};
+
+PostsApi.countAllPosts = function() {
+  return new Promise(function(resolve, reject) {
+    postsEntity
+      .count()
       .then(responsePost => {
         resolve({ success: true, data: responsePost });
       })

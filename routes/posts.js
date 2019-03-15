@@ -50,6 +50,17 @@ router.get("/:limit&:offset", (req, res, next) => {
     });
 });
 
+router.get("/get/count/all", (req, res, next) => {
+  posts
+    .countAllPosts()
+    .then(resolve => {
+      return res.json(resolve);
+    })
+    .catch(reject => {
+      return res.status(500).json(reject);
+    });
+});
+
 router.get("/:idUser/:limit&:offset", (req, res, next) => {
   posts
     .findByUser(

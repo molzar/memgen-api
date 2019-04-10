@@ -1,7 +1,13 @@
 function GetConfig() {}
 
 const someRandomWelcomeMessage = "Welcome back !";
-const realRoutes = ["/api/users", "/api/posts", "/api/proxy"];
+const realRoutes = [
+  "/api/users",
+  "/api/posts",
+  "/api/proxy",
+  "/api/likes",
+  "/api/comments"
+];
 //load all configs into config
 //TODO : DO better !
 const config = {

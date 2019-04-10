@@ -12,6 +12,8 @@ app.use(function(req, res, next) {
 const routes = require("../routes/index");
 const apiUsers = require("../routes/users");
 const apiPosts = require("../routes/posts");
+const apiLikes = require("../routes/likes");
+const apiComments = require("../routes/comments");
 const apiProxy = require("../routes/proxy");
 const bodyParser = require("body-parser");
 const dotenv = require("dotenv");
@@ -24,6 +26,8 @@ app.use("/", routes);
 app.use("/api/users", apiUsers);
 app.use("/api/posts", apiPosts);
 app.use("/api/proxy", apiProxy);
+app.use("/api/likes", apiLikes);
+app.use("/api/comments", apiComments);
 app.use((req, res, next) => {
   var err = new Error("Not Found");
   err.status = 404;

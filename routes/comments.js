@@ -36,11 +36,6 @@ router.put("/:id", (req, res, next) => {
         ? req.query.id_parent
         : null
   });
-  console.log(
-    `${req.params.id} ${req.query.id_post} ${req.query.id_user} ${
-      req.query.text_comment
-    } ${req.query.id_parent}`
-  );
   comments
     .update(
       comment,
@@ -48,7 +43,6 @@ router.put("/:id", (req, res, next) => {
       req.query.offset ? req.query.offset : 0
     )
     .then(resolve => {
-      console.table(resolve);
       return res.json(resolve);
     })
     .catch(reject => {

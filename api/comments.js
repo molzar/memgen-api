@@ -61,14 +61,13 @@ CommentsApi.findByPost = function(idPost, limit, offset, idParent) {
 };
 
 CommentsApi.update = function(comment, limit, offset) {
-  console.log(comment.id_parent);
   return new Promise(function(resolve, reject) {
     commentsEntity
       .findByPk(comment.id)
       .then(responseComment => {
         if (responseComment && responseComment.id) {
           responseComment.text_comment = comment.text_comment;
-          responseComment.edited_at = new Date();
+          responseComment.updated_at = db.sequelize.fn("NOW");
           responseComment
             .save()
             .then(() => {
@@ -100,7 +99,6 @@ CommentsApi.deleteById = function(commentId) {
       .findByPk(commentId)
       .then(responseComment => {
         if (responseComment && responseComment.id) {
-          console.table(responseComment);
           responseComment.destroy();
           resolve({
             success: true,

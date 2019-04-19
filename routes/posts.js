@@ -24,7 +24,11 @@ router.get("/getMemesSlide", (req, res, next) => {
 router.post("/", (req, res, next) => {
   const post = postsEntity.build({
     url: req.query.url,
-    id_user: req.query.id_user
+    id_user: req.query.id_user,
+    width: req.query.width,
+    height: req.query.height,
+    title: req.query.title,
+    delete_hash: req.query.delete_hash
   });
   posts
     .insert(post)
@@ -39,10 +43,8 @@ router.post("/", (req, res, next) => {
 router.put("/:id", (req, res, next) => {
   const post = postsEntity.build({
     id: req.params.id,
-    url: req.query.url,
-    id_user: req.query.id_user
+    reported: req.query.reported
   });
-
   posts
     .update(post)
     .then(resolve => {

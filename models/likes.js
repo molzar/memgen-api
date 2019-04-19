@@ -13,15 +13,21 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         references: {
           model: "posts",
-          key: "id"
-        }
+          key: "id",
+          as: "id_post"
+        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE"
       },
       id_user: {
         type: DataTypes.INTEGER,
         references: {
           model: "users",
-          key: "id"
-        }
+          key: "id",
+          as: "id_user"
+        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE"
       },
       like: {
         type: DataTypes.INTEGER,

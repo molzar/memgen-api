@@ -14,14 +14,17 @@ PostsApi.findAllPostsSlide = function(
   return new Promise((resolve, reject) => {
     const orderBy =
       whereToLoad == -1 ? "order by p.id asc" : "order by p.id desc";
-    console.log(`orderBy : ${orderBy}`);
     db.sequelize
       .query(
         `SELECT p.*, 
            (SELECT COUNT(l.like) FROM likes as l WHERE l.id_post = p.id and l.like = 1) as likes, 
            (SELECT COUNT(l.like) FROM likes as l WHERE l.id_post = p.id and l.like <> 1) as dislikes,
-           (SELECT COUNT(c.id) FROM comments as c WHERE c.id_post = p.id and c.id_parent is null) as "nbrComments"
+           (SELECT COUNT(c.id) FROM comments as c WHERE c.id_post = p.id and c.id_parent is null) as "nbrComments",
+           usr.avatarurl, 
+           usr.username,
+           usr.email
         FROM posts as p 
+        Join users usr on usr.id = p.id_user
         where (p.id_user = :idUser or :idUser = '0')
         and ( :idPost = '0' 
             or ((:whereToLoad = '1' and :includeIdPost = '1' and p.id <= :idPost and :idPost != '-1')
@@ -63,8 +66,15 @@ PostsApi.findAllPosts = function(limit, offset) {
         `SELECT p.*, 
            (SELECT COUNT(l.like) FROM likes as l WHERE l.id_post = p.id and l.like = 1) as likes, 
            (SELECT COUNT(l.like) FROM likes as l WHERE l.id_post = p.id and l.like <> 1) as dislikes,
-           (SELECT COUNT(c.id) FROM comments as c WHERE c.id_post = p.id and c.id_parent is null) as "nbrComments"
-        FROM posts as p ORDER BY p.id DESC limit :limit offset :offset`,
+           (SELECT COUNT(c.id) FROM comments as c WHERE c.id_post = p.id and c.id_parent is null) as "nbrComments",
+           usr.avatarurl, 
+           usr.username,
+           usr.email
+        FROM posts as p 
+        Join users usr on usr.id = p.id_user
+        ORDER BY p.id DESC 
+        limit :limit 
+        offset :offset`,
         {
           replacements: { limit: limit, offset: offset },
           type: db.sequelize.QueryTypes.SELECT,
@@ -88,8 +98,12 @@ PostsApi.findOnePost = function(postId) {
         `SELECT p.*, 
            (SELECT COUNT(l.like) FROM likes as l WHERE l.id_post = p.id and l.like = 1) as likes, 
            (SELECT COUNT(l.like) FROM likes as l WHERE l.id_post = p.id and l.like <> 1) as dislikes,
-           (SELECT COUNT(c.id) FROM comments as c WHERE c.id_post = p.id and c.id_parent is null) as "nbrComments"
+           (SELECT COUNT(c.id) FROM comments as c WHERE c.id_post = p.id and c.id_parent is null) as "nbrComments",
+           usr.avatarurl, 
+           usr.username,
+           usr.email
         FROM posts as p 
+        Join users usr on usr.id = p.id_user
         where p.id = :id`,
         {
           replacements: { id: postId },
@@ -127,8 +141,13 @@ PostsApi.findByUser = function(idUser, limit, offset) {
         `SELECT p.*, 
            (SELECT COUNT(l.like) FROM likes as l WHERE l.id_post = p.id and l.like = 1) as likes, 
            (SELECT COUNT(l.like) FROM likes as l WHERE l.id_post = p.id and l.like <> 1) as dislikes,
-           (SELECT COUNT(c.id) FROM comments as c WHERE c.id_post = p.id and c.id_parent is null) as "nbrComments"
-        FROM posts as p where p.id_user = :idUser 
+           (SELECT COUNT(c.id) FROM comments as c WHERE c.id_post = p.id and c.id_parent is null) as "nbrComments",
+           usr.avatarurl, 
+           usr.username,
+           usr.email
+        FROM posts as p 
+        Join users usr on usr.id = p.id_user
+        where p.id_user = :idUser 
         ORDER BY p.id DESC 
         limit :limit 
         offset :offset`,
@@ -154,8 +173,7 @@ PostsApi.update = function(post) {
       .findByPk(post.id)
       .then(responsePost => {
         if (responsePost && responsePost.id) {
-          responsePost.url = post.url;
-          responsePost.id_user = post.id_user;
+          responsePost.reported += 1;
           responsePost
             .save()
             .then(responseSavePost => {
@@ -197,7 +215,11 @@ PostsApi.insert = function(post) {
     postsEntity
       .create({
         url: post.url,
-        id_user: post.id_user
+        id_user: post.id_user,
+        width: post.width,
+        height: post.height,
+        title: post.title,
+        delete_hash: post.delete_hash
       })
       .then(responsePost => {
         resolve({ success: true, data: responsePost });
